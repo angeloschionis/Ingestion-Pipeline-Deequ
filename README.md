@@ -13,10 +13,9 @@ b) Output table - “dpp-output-metrics-result” to store the metric result for
 Create the Glue job with the script SuggestionRunner
 important parameters :
 1. use Spark 2.4 , Scala 2 (glue 1.0)
-2. provide the dependant jars (deequ-1.0.1.jar) in the S3 path as - s3://vw-deeq-jar-scripts  --> Here you may choose your bucket name as well.
-3. Enable Glue Catalog for Hive Metastore
-4. The role chosen while creation of Glue job should have access to S3 and DynamoDB
+2. The role chosen while creation of Glue job should have access to S3 and DynamoDB
+3. provide the dependant jars (deequ-1.0.1.jar) in the S3 path as - s3://vw-deeq-jar-scripts  --> Here you may choose your bucket name as well.
+4. Enable Glue Catalog for Hive Metastore
 
-[Image: image.png]
 
 
