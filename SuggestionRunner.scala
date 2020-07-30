@@ -50,7 +50,7 @@ object GlueApp {
     
 // read the file names from s3 bucket and store in a dataframe
 
-   val bucket = "vw-dpp-testdata-input"
+   val bucket = "achionis-vw-dpp-testdata-input"
    // val prefix = "input1" // In case prefix is required
    val s3Client = new AmazonS3Client()
    val req = new ListObjectsRequest().withBucketName(bucket)
@@ -117,9 +117,9 @@ object GlueApp {
   StructField("bucket-name", StringType, true),
   StructField("file-name", StringType, true)))
 
-  // For each of the NOT PROCESSED File run the analysis below to get metrics -- the analysis code needs to be replaced by suggestions
+  // For each of the NOT PROCESSED File run the analysis below to get metrics
    
-   	for (row <- dfReadNotProcessed.rdd.collect)
+    for (row <- dfReadNotProcessed.rdd.collect)
 {
         println("row :" + row)
     var bucketName = row.mkString(",").split(",")(1)
@@ -212,7 +212,7 @@ object GlueApp {
 
 // Additinally write metrics result on s3 as well ( to be seen via Athena)
 
- var opS3Path = "s3n://" + "vw-dpp-testdata-output" + "/" + fileName
+ var opS3Path = "s3n://" + "achionis-vw-dpp-testdata-input" + "/" + fileName
  
  println("s3 output path " + opS3Path)
  
