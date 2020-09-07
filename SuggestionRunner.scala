@@ -50,7 +50,7 @@ object GlueApp {
     
 // read the file names from s3 bucket and store in a dataframe
 
-   val bucket = "achionis-vw-dpp-testdata-input"
+   val bucket = "achionis-deequ-testdata-input"
    // val prefix = "input1" // In case prefix is required
    val s3Client = new AmazonS3Client()
    val req = new ListObjectsRequest().withBucketName(bucket)
@@ -212,7 +212,7 @@ object GlueApp {
 
 // Additinally write metrics result on s3 as well ( to be seen via Athena)
 
- var opS3Path = "s3n://" + "achionis-vw-dpp-testdata-input" + "/" + fileName
+ var opS3Path = "s3n://" + "achionis-deequ-testdata-output" + "/" + fileName
  
  println("s3 output path " + opS3Path)
  
