@@ -90,7 +90,7 @@ object GlueApp {
     dynamoDbSink.writeDynamicFrame(dynamicFrame)
 
     println("writing complete to input table of DDB " )
-// End of writing to dynamodb
+// End of writing to dynamodb input table
 
 // start reading the bucket and file names from Dynamodb input tables to a dataframe 
     val dynamicFrameRead = glueContext.getSourceWithFormat(
@@ -111,12 +111,8 @@ object GlueApp {
     //filter to consider only those files whose processing status in N
     val dfReadNotProcessed = dfRead.filter(dfRead("processed") === "N")
 
-    println("after applying filter " + dfReadNotProcessed.show() )
+    println("after applying filter for only NOT processed file " + dfReadNotProcessed.show() )
    
-   val schemaBucketAndFile = StructType(List(
-  StructField("bucket-name", StringType, true),
-  StructField("file-name", StringType, true)))
-
   // For each of the NOT PROCESSED File run the analysis below to get metrics
    
     for (row <- dfReadNotProcessed.rdd.collect)
@@ -154,24 +150,48 @@ object GlueApp {
 // retrieve successfully computed metrics as a Spark data frame
     var metrics = successMetricsAsDataFrame(spark, analysisResult)
     
-    println("raw metric : " + metrics.show())
+  //Add file name, bucket name and the pk for each row of the metrics obtained and write the data to DynamoDB output table
     
-    for (row1 <- metrics.rdd.collect)
+     for (rowMetrics <- metrics.rdd.collect)
     {
         
-    var entity = row1.mkString(",").split(",")(0)
-    var name = row1.mkString(",").split(",")(2)
+    println("rowMetrics ::" + rowMetrics)
+    
+    println("rowMetrics type ::" + rowMetrics.getClass)
+    
+    //Extract the column values from the 1st row of the metrics and create a dataframe 
+        
+    var entity = rowMetrics.mkString(",").split(",")(0)
+    var instance = rowMetrics.mkString(",").split(",")(1)
+    var name = rowMetrics.mkString(",").split(",")(2)
+    var value = rowMetrics.mkString(",").split(",")(3)
+    println("name is ::" + name)   
+
+
+var rowMetricsToData = List(Row(entity , instance , name,value))
+
+var schemaForMetric = StructType(List(
+  StructField("entity", StringType, true),
+  StructField("instance", StringType, true),
+  StructField("name", StringType, true),
+  StructField("value", StringType, true) ) )
+  
+   
+     var rddrowMetricsToData = spark.sparkContext.parallelize(rowMetricsToData)
+     var metricsDDB = spark.createDataFrame(rddrowMetricsToData, schemaForMetric)
     
     var bucket_file_entity_name = bucketName + "_" + fileName + "_" + entity + "_" + name
     
     println("bucket_file_entity_name :" + bucket_file_entity_name)
     
-    var metricsDDB = metrics.withColumn("bucket_file_entity_name", lit(bucket_file_entity_name))
+    //add bucket name, file name and a primary key (concatenation of bucket,file,entity and name ) to the dataframe created above
+    
+    metricsDDB = metricsDDB.withColumn("bucket_file_entity_name", lit(bucket_file_entity_name))
     metricsDDB = metricsDDB.withColumn("bucket-name", lit(bucketName))
     metricsDDB = metricsDDB.withColumn("file-name", lit(fileName))
-   //println("after adding pk for DDB : " + metricsDDB.show() )
     
-   //writing metrics to dynamodb
+    
+   //writing metrics to dynamodb output table
    val dynamicFrameMetric = DynamicFrame(metricsDDB, glueContext)
     val dynamoDbSink: DynamoDbDataSink =  glueContext.getSinkWithFormat(
       connectionType = "dynamodb",
@@ -185,7 +205,7 @@ object GlueApp {
 
     println("writing complete the metrics to DDB " )
    
-   // End of writing metric result to dynamodb
+   // End of writing metric result to dynamodb output table
    
    // start of updating the file processed status in dynamodb after the file has been process and result is stored in dynamodb
    
