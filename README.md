@@ -12,6 +12,8 @@ This solution is based on the following approach:
 3)	Results are stored to a DynamoDB table so they can be consumed by a data catalogue or any reporting tool
 4) 	Results are also stored on S3 as we will utilize them on later releases as part of lineage report
 5) 	Results are displayed into a central portal where users can also define the data quality metrics.
+
+![1](https://user-images.githubusercontent.com/61417780/94172152-70d66300-fe92-11ea-8307-b221e4a0c824.jpg) 
  
 	
 •	Pre-requisites
@@ -23,12 +25,11 @@ a)	Input table - “dpp-input-file-names” to store the bucket name, file names
 
 Table name	dpp-input-file-names
 
-Primary partition key	
-	bucket-name (String)
+Primary partition key	bucket-name (String)
 
 Primary sort key	file-name (String)
 
-
+![2](https://user-images.githubusercontent.com/61417780/94172153-716ef980-fe92-11ea-958a-e541f96f6f78.png)
  
 
 b) Output table - “dpp-output-metrics-result” to store the metric result for each of the file. Here the primary key has been created by combination of the business keys to make it unique - bucketName  and FileName and entity and name of the attribute that we are measuring.
@@ -36,40 +37,42 @@ b) Output table - “dpp-output-metrics-result” to store the metric result for
 Table name	dpp-output-metrics-result
 Primary partition key	bucket_file_entity_name (String)
 
-
+![3](https://user-images.githubusercontent.com/61417780/94172156-716ef980-fe92-11ea-96e2-4562c6f25471.png)
 	 
 
 	S3 Buckets :
 S3 bucket names are globally unique and these buckets are already created. So you may need to create your own buckets in your accounts with different names. Accordingly you need to replace the bucket name (with your bucket name) in the scala scripts. You need to create the following buckets:
 1)	Input bucket: here you will store the data that you will use to run your DQ against. You can also store your dependent jars here ( 1.04 is the latest version – in this solution we use version 1.01 https://mvnrepository.com/artifact/com.amazon.deequ/deequ/1.0.1) 
- 
+![4](https://user-images.githubusercontent.com/61417780/94172157-72079000-fe92-11ea-90ea-4a5a3148c7fb.png)
 
 2)	Output bucket: this is used to store the output data of the report. This is not necessary but we want to have this option as those outputs can be later used for lineage reports between files that have been scanned by this DQ solution.
- 
+ ![5](https://user-images.githubusercontent.com/61417780/94172158-72079000-fe92-11ea-92b9-2b5d27aa1576.png)
 
 	Glue Crawler
 Create a crawler pointing at the output files on the output bucket as per below:
- 
+![6](https://user-images.githubusercontent.com/61417780/94172160-72079000-fe92-11ea-8f68-11d4e008cce7.png)
 
 •	Glue Job
 	Configuration of Glue Job
 -	Use Spark 2.4 , Scala 2 (glue 1.0)
 -	The role chosen while creation of Glue job should have access to S3 and DynamoDB for this job AmazonDynamoDBFullAccess, AmazonS3FullAccess and AWSGlueServiceRole access were chosen for the IAM role. 
 -	Provide the dependent jars
- 
+![7](https://user-images.githubusercontent.com/61417780/94172162-72a02680-fe92-11ea-87dc-dfc00829569c.png) 
 
 -	Enable Glue Catalog for Hive Metastore
- 
+![8](https://user-images.githubusercontent.com/61417780/94172163-72a02680-fe92-11ea-9204-249a7b024b40.png) 
 
 
 -	Scala class name as - GlueApp
-
+![9](https://user-images.githubusercontent.com/61417780/94172165-7338bd00-fe92-11ea-9d41-7a9ea28965d8.png)
  
 
 -	Scala script changes as follows per this script : https://github.com/angeloschionis/Ingestion-Pipeline-Deequ/blob/master/DeeQuAnalysis.scala 
 -	Then you can create a workflow that will run the Glue Job and Crawler that will populate an Athena table to allow any reporting need using this approach 
- 
+![10](https://user-images.githubusercontent.com/61417780/94172166-7338bd00-fe92-11ea-8d78-7dceb9797df9.png)
 
 -	You can see the results both in Athena and DynamoDB
+![11](https://user-images.githubusercontent.com/61417780/94172167-7338bd00-fe92-11ea-95c4-90e90b0176ed.png)
+![12](https://user-images.githubusercontent.com/61417780/94172169-73d15380-fe92-11ea-82d5-4dc97bee6477.png)
   
  
