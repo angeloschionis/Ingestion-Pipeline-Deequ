@@ -1,11 +1,11 @@
-Description: "AWS Glue Job deeq with parameters"
+Description: "Data Qualtiy Tool with parameters"
 Parameters:
   S3BucketForScript:
-    Description: Name of a pre-existing bucket that stores the script for deeq
+    Description: Name of a pre-existing bucket that stores the script for deequ
     Type: String
     Default: ''
   S3BucketForDeeqJar:
-    Description: Name of a pre-existing bucket that stores the .jar file for deeq
+    Description: Name of a pre-existing bucket that stores the .jar file for deequ
     Type: String
     Default: ''
   S3BucketForInputData:
@@ -25,7 +25,7 @@ Parameters:
     Type: String
     Default: ''
   DynamoDBInputTable:
-    Description: Name of the Input table in DDB which stores the file names to be processed by deeq and their processing status. In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
+    Description: Name of the Input table in DDB which stores the file names to be processed by deequ and their processing status. In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
     Type: String
     Default: ''
   DynamoDBMetricTable:
@@ -33,15 +33,15 @@ Parameters:
     Type: String
     Default: ''
   ApproxCountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics ApproxCountDistinct
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics ApproxCountDistinct
     Type: String
     Default: false
   CompletenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Completeness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Completeness
     Type: String
     Default: false  
   ComplianceCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Compliance
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Compliance
     Type: String
     Default: false
   ComplianceLogic:
@@ -49,7 +49,7 @@ Parameters:
     Type: String
     Default: false
   CorrelationCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Correlation
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Correlation
     Type: String
     Default: false
   CorrelationLogic:
@@ -57,51 +57,51 @@ Parameters:
     Type: String
     Default: false
   CountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics CountDistinct
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics CountDistinct
     Type: String
     Default: false
   DataTypeCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics DataType
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics DataType
     Type: String
     Default: false
   DistinctnessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Distinctness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Distinctness
     Type: String
     Default: false
   EntropyCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Entropy
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Entropy
     Type: String
     Default: false
   MaximumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Maximum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Maximum
     Type: String
     Default: false
   MeanCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Mean
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Mean
     Type: String
     Default: false
   MinimumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Minimum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Minimum
     Type: String
     Default: false
   MutualInformationCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics MutualInformation
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics MutualInformation
     Type: String
     Default: false
   MutualInformationOtheCol:
-    Description: Name of the other column of to apply the deeq metrics MutualInformation MutualInformation
+    Description: Name of the other column of to apply the deequ metrics MutualInformation MutualInformation
     Type: String
     Default: false
   SumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Sum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Sum
     Type: String
     Default: false
   UniqueValueRatioCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics UniqueValueRatio
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics UniqueValueRatio
     Type: String
     Default: false
   UniquenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics Uniqueness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Uniqueness
     Type: String
     Default: false
 Conditions:
@@ -127,7 +127,7 @@ Metadata:
                 Label: 
                     default: "s3 bucket information"
                 Parameters: 
-                    - S3BucketForDeeqJar
+                    - S3BucketForDeequJar
                     - S3BucketForInputData
                     - S3BucketForOutputData
                     - S3BucketForScript
@@ -141,7 +141,7 @@ Metadata:
                     - DynamoDBMetricTable
             -
                 Label: 
-                    default: "column and additional parameters for deeq measurements"
+                    default: "column and additional parameters for deequ checks"
                 Parameters:
                     - ApproxCountDistinctCol
                     - ApproxQuantileCol
