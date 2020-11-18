@@ -125,7 +125,7 @@ Metadata:
         ParameterGroups: 
             -
                 Label: 
-                    default: "s3 bucket information with data format csv/json"
+                    default: "s3 bucket information"
                 Parameters: 
                     - S3BucketForDeeqJar
                     - S3BucketForInputData
