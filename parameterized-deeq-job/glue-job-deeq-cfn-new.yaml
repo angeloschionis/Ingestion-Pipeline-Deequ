@@ -33,23 +33,23 @@ Parameters:
     Type: String
     Default: ''
   ApproxCountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics ApproxCountDistinct
     Type: String
     Default: false
   CompletenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Completeness
     Type: String
     Default: false  
   ComplianceCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Compliance
     Type: String
     Default: false
   ComplianceLogic:
-    Description: condition for compliance
+    Description: condition for compliance metrics
     Type: String
     Default: false
   CorrelationCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Correlation
     Type: String
     Default: false
   CorrelationLogic:
@@ -57,51 +57,51 @@ Parameters:
     Type: String
     Default: false
   CountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics CountDistinct
     Type: String
     Default: false
   DataTypeCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics DataType
     Type: String
     Default: false
   DistinctnessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Distinctness
     Type: String
     Default: false
   EntropyCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Entropy
     Type: String
     Default: false
   MaximumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Maximum
     Type: String
     Default: false
   MeanCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Mean
     Type: String
     Default: false
   MinimumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Minimum
     Type: String
     Default: false
   MutualInformationCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics MutualInformation
     Type: String
     Default: false
   MutualInformationOtheCol:
-    Description: Name of the other column of to apply the deeq metrics MutualInformation
+    Description: Name of the other column of to apply the deeq metrics MutualInformation MutualInformation
     Type: String
     Default: false
   SumCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Sum
     Type: String
     Default: false
   UniqueValueRatioCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics UniqueValueRatio
     Type: String
     Default: false
   UniquenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics Uniqueness
     Type: String
     Default: false
 Conditions:
