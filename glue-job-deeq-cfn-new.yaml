@@ -1,0 +1,283 @@
+Description: "AWS Glue Job deeq with parameters"
+Parameters:
+  S3BucketForScript:
+    Description: Name of a pre-existing bucket that stores the script for deeq
+    Type: String
+    Default: ''
+  S3BucketForDeeqJar:
+    Description: Name of a pre-existing bucket that stores the .jar file for deeq
+    Type: String
+    Default: ''
+  S3BucketForInputData:
+    Description: Name of a pre-existing input bucket that stores the input data
+    Type: String
+    Default: ''
+  S3BucketForOutputData:
+    Description: Name of a pre-existing output bucket that will store the output data
+    Type: String
+    Default: ''
+  tempDir:
+    Description: Name of a temp location in s3 bucket which would be used by Glue job to store temporary/intermediate data
+    Type: String
+    Default: ''
+  FileFormat:
+    Description: csv of json file format
+    Type: String
+    Default: ''
+  DynamoDBInputTable:
+    Description: Name of the Input table in DDB which stores the file names to be processed by deeq and their processing status. In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
+    Type: String
+    Default: ''
+  DynamoDBMetricTable:
+    Description: Name of the table in DDB which stores the output result after deeq processed the input data and generate the metrics.In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
+    Type: String
+    Default: ''
+  ApproxCountDistinctCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  CompletenessCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false  
+  ComplianceCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  ComplianceLogic:
+    Description: condition for compliance
+    Type: String
+    Default: false
+  CorrelationCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  CorrelationLogic:
+    Description: Other column/fields for Correlation 
+    Type: String
+    Default: false
+  CountDistinctCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  DataTypeCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  DistinctnessCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  EntropyCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  MaximumCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  MeanCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  MinimumCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  MutualInformationCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  MutualInformationOtheCol:
+    Description: Name of the other column of to apply the deeq metrics MutualInformation
+    Type: String
+    Default: false
+  SumCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  UniqueValueRatioCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+  UniquenessCol:
+    Description: Name of the column of your dataset on which you want to apply the deeq metrics
+    Type: String
+    Default: false
+Conditions:
+  DynamoDBInputTableNameEmpty:
+    Fn::Equals:
+    - ''
+    - Ref: DynamoDBInputTable
+  DynamoDBInputTableNotEmpty:
+    Fn::Not:
+    - Condition: DynamoDBInputTableNameEmpty
+  DynamoDBMetricTableEmpty:
+    Fn::Equals:
+    - ''
+    - Ref: DynamoDBMetricTable
+  DynamoDBMetricTableNotEmpty:
+    Fn::Not:
+    - Condition: DynamoDBMetricTableEmpty
+
+Metadata: 
+    AWS::CloudFormation::Interface: 
+        ParameterGroups: 
+            -
+                Label: 
+                    default: "s3 bucket information with data format csv/json"
+                Parameters: 
+                    - S3BucketForDeeqJar
+                    - S3BucketForInputData
+                    - S3BucketForOutputData
+                    - S3BucketForScript
+                    - tempDir
+                    - FileFormat
+            -
+                Label: 
+                    default: "DynamoDB table names"
+                Parameters:
+                    - DynamoDBInputTable
+                    - DynamoDBMetricTable
+            -
+                Label: 
+                    default: "column and additional parameters for deeq measurements"
+                Parameters:
+                    - ApproxCountDistinctCol
+                    - ApproxQuantileCol
+                    - quantile
+                    - CompletenessCol
+                    - ComplianceCol
+                    - ComplianceLogic
+                    - CorrelationCol
+                    - CorrelationLogic
+                    - CountDistinctCol
+                    - DataTypeCol
+                    - DistinctnessCol
+                    - EntropyCol
+                    - MaximumCol
+                    - MeanCol
+                    - MinimumCol
+                    - MutualInformationCol
+                    - MutualInformationOtheCol
+                    - PatternMatchCol
+                    - PatternMatchPattern
+                    - SumCol
+                    - UniqueValueRatioCol
+                    - UniquenessCol
+
+
+Resources:
+  myInputDynamoDBTable:
+    Condition: DynamoDBInputTableNameEmpty
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "bucket-name"
+          AttributeType: "S"
+        - 
+          AttributeName: "file-name"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "bucket-name"
+          KeyType: "HASH"
+        - 
+          AttributeName: "file-name"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      ## TableName: dpp-input-file-names
+
+  myOutputDynamoDBTable:
+    Condition: DynamoDBMetricTableEmpty
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "bucket_file_entity_name"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "bucket_file_entity_name"
+          KeyType: "HASH"
+
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      ## TableName: dpp-output-metrics-result
+
+  MyJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "glue.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+        - "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+        - "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess"
+      RoleName: glue-admin-role-for-deeq-job-with-param
+
+  MyJob:
+    Type: AWS::Glue::Job
+    Properties:
+      GlueVersion: "1.0"
+      Command:
+        Name: glueetl        
+        ScriptLocation: !Ref S3BucketForScript ## "s3://aws-glue-scripts-605813696691-eu-west-1"        
+      DefaultArguments:
+        "--job-bookmark-option": "job-bookmark-enable"
+        "--extra-jars": !Ref S3BucketForDeeqJar ## "s3://jar-deeq/deequ-1.0.1.jar"
+        "--job-language": "scala"
+        "--class": GlueApp
+        "--TempDir": !Ref tempDir ## "s3://aws-glue-scripts-605813696691-eu-west-1/admin"
+        "--enable-glue-datacatalog": ""
+        "--s3_input_data_folder": !Ref S3BucketForInputData ## "vw-dpp-testdata-input"
+        "--s3_output_data_folder": !Ref S3BucketForOutputData ## "vw-dpp-testdata-output"
+        "--file_format": !Ref FileFormat ## "csv"
+        "--ddb_input_table": 
+            Fn::If:
+            - DynamoDBInputTableNotEmpty
+            - !Ref DynamoDBInputTable
+            - !Select [1, !Split ['/', !GetAtt myInputDynamoDBTable.Arn]] ##!GetAtt myInputDynamoDBTable.Arn ##!Ref DynamoDBInputTable 
+            ## dpp-input-file-names
+        "--ddb_metric_result_table":  ##!Ref DynamoDBMetricTable ## dpp-output-metrics-result
+            Fn::If:
+            - DynamoDBMetricTableNotEmpty
+            - !Ref DynamoDBMetricTable
+            - !Select [1, !Split ['/', !GetAtt myOutputDynamoDBTable.Arn]]
+        "--ApproxCountDistinctCol": !Ref ApproxCountDistinctCol
+        "--CompletenessCol": !Ref CompletenessCol
+        "--ComplianceCol": !Ref ComplianceCol
+        "--ComplianceLogic": !Ref ComplianceLogic
+        "--CorrelationCol": !Ref CorrelationCol
+        "--CorrelationCol2": !Ref CorrelationLogic
+        "--CountDistinctCol": !Ref CountDistinctCol
+        "--DataTypeCol": !Ref DataTypeCol
+        "--DistinctnessCol": !Ref DistinctnessCol
+        "--EntropyCol": !Ref EntropyCol
+        "--MaximumCol": !Ref MaximumCol
+        "--MeanCol": !Ref MeanCol
+        "--MinimumCol": !Ref MinimumCol
+        "--MutualInformationCol": !Ref MutualInformationCol
+        "--MutualInformationOtheCol": !Ref MutualInformationOtheCol
+        "--SumCol": !Ref SumCol
+        "--UniqueValueRatioCol": !Ref UniqueValueRatioCol
+        "--UniquenessCol": !Ref UniquenessCol
+      ExecutionProperty:
+        MaxConcurrentRuns: 2
+      MaxRetries: 0
+      Name: jb-deeq-via-cfn1
+      Role: !Ref MyJobRole
+
