@@ -4,7 +4,7 @@ Parameters:
     Description: Name of a pre-existing bucket that stores the script for deequ
     Type: String
     Default: ''
-  S3BucketForDeeqJar:
+  S3BucketForDeequJar:
     Description: Name of a pre-existing bucket that stores the .jar file for deequ
     Type: String
     Default: ''
@@ -238,7 +238,7 @@ Resources:
         ScriptLocation: !Ref S3BucketForScript ## "s3://aws-glue-scripts-605813696691-eu-west-1"        
       DefaultArguments:
         "--job-bookmark-option": "job-bookmark-enable"
-        "--extra-jars": !Ref S3BucketForDeeqJar ## "s3://jar-deeq/deequ-1.0.1.jar"
+        "--extra-jars": !Ref S3BucketForDeequJar ## "s3://jar-deeq/deequ-1.0.1.jar"
         "--job-language": "scala"
         "--class": GlueApp
         "--TempDir": !Ref tempDir ## "s3://aws-glue-scripts-605813696691-eu-west-1/admin"
