@@ -1,11 +1,11 @@
 Description: "Data Qualtiy Tool with parameters"
 Parameters:
   S3BucketForScript:
-    Description: Name of a pre-existing bucket that stores the script for deequ
+    Description: S3 URL for the DQ Tool Scala script 
     Type: String
     Default: ''
   S3BucketForDeequJar:
-    Description: Name of a pre-existing bucket that stores the .jar file for deequ
+    Description: S3 URL for the .jar file for deequ
     Type: String
     Default: ''
   S3BucketForInputData:
