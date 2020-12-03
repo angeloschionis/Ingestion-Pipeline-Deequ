@@ -33,75 +33,75 @@ Parameters:
     Type: String
     Default: ''
   ApproxCountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics ApproxCountDistinct
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics ApproxCountDistinct.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   CompletenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Completeness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Completeness.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false  
   ComplianceCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Compliance
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Compliance.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   ComplianceLogic:
-    Description: condition for compliance metrics
+    Description: condition for compliance metrics.For multiple columns please provide logics separated by comma (,) like  columnA=100,columnB>=200,columnC<=500
     Type: String
     Default: false
   CorrelationCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Correlation
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Correlation.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   CorrelationLogic:
-    Description: Other column/fields for Correlation 
+    Description: Other column/fields for Correlation.For multiple columns provided in CorrelationCol above, please provide Other column/fields  also separated by comma (,) like columnACorr,columnBCorr,columnCCorr
     Type: String
     Default: false
   CountDistinctCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics CountDistinct
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics CountDistinct.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   DataTypeCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics DataType
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics DataType.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   DistinctnessCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Distinctness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Distinctness.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   EntropyCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Entropy
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Entropy.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   MaximumCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Maximum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Maximum.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   MeanCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Mean
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Mean.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   MinimumCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Minimum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Minimumz.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   MutualInformationCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics MutualInformation
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics MutualInformation.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   MutualInformationOtheCol:
-    Description: Name of the other column of to apply the deequ metrics MutualInformation MutualInformation
+    Description: Name of the other column of to apply the deequ metrics MutualInformation MutualInformation.For multiple columns provided in the field MutualInformationCol above ,please provide name of the other columns also separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   SumCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Sum
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Sum.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   UniqueValueRatioCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics UniqueValueRatio
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics UniqueValueRatio.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
   UniquenessCol:
-    Description: Name of the column of your dataset on which you want to apply the deequ metrics Uniqueness
+    Description: Name of the column of your dataset on which you want to apply the deequ metrics Uniqueness.For multiple columns please provide columns separated by comma (,) like columnA,columnB,columnC
     Type: String
     Default: false
 Conditions:
