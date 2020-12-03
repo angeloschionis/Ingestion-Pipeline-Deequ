@@ -29,7 +29,7 @@ Parameters:
     Type: String
     Default: ''
   DynamoDBMetricTable:
-    Description: Name of the table in DDB which stores the output result after deeq processed the input data and generate the metrics.In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
+    Description: Name of the table in DDB which stores the output result after deequ processed the input data and generate the metrics.In case you dont have created the table and want this stack to create the table for you, please leave this blank. Otherwise please provide your DDB table name
     Type: String
     Default: ''
   ApproxCountDistinctCol:
@@ -197,12 +197,19 @@ Resources:
     Properties: 
       AttributeDefinitions: 
         - 
-          AttributeName: "bucket_file_entity_name"
+          AttributeName: "bucket-file-name"
           AttributeType: "S"
+        - 
+          AttributeName: "col-metricName"
+          AttributeType: "S"          
+          
       KeySchema: 
         - 
-          AttributeName: "bucket_file_entity_name"
+          AttributeName: "bucket-file-name"
           KeyType: "HASH"
+        - 
+          AttributeName: "col-metricName"
+          KeyType: "RANGE"
 
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
@@ -278,6 +285,5 @@ Resources:
       ExecutionProperty:
         MaxConcurrentRuns: 2
       MaxRetries: 0
-      Name: jb-deeq-via-cfn1
+      Name: jb-deequ-via-cfn
       Role: !Ref MyJobRole
-
