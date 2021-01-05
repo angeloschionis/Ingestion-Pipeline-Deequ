@@ -15,64 +15,70 @@ This solution is based on the following approach:
 
 ![1](https://user-images.githubusercontent.com/61417780/94172152-70d66300-fe92-11ea-8307-b221e4a0c824.jpg) 
  
-	
-•	Pre-requisites
-	DynamoDB :
-Before creation of the Glue job, we create 2 DynamoDB tables. The idea is after the new files arrive to S3 bucket, the glue job needs to extract the file names and store in a DynamoDB input table (*dpp-input-file-names*) with processing status = N. After the job processed the files the metric result will be stored to another DynamoDB output table table (*dpp-output-metrics-result*) and it will update the file processed status as Y to input table. 
-The details of keys and sample screen print of these tables are mentioned below.
+All the infrastructure is managed through AWS CloudFormation as well the parameters and the setup of the tool to work on our data.
 
-a)	Input table - “dpp-input-file-names” to store the bucket name, file names and processed status. Before processing the file the processed status would be = N. After processing the file, the status would be updated to Y.
+How to use the DQ Tool
+Step 1:
+Download the necessary files for our tool from this Github repository to your local PC or S3 bucket:
+https://github.com/angeloschionis/Ingestion-Pipeline-Deequ 
+-	DeeQuAnalysis-Parameterized.scala – Scala code that contains all the logic of our DQ Tool
+-	glue-job-deeq-cfn-new.yaml – CloudFormation Script
+-	deequ-1.0.1.jar – Jar that we need to run DeeQu library 
 
-Table name	dpp-input-file-names
 
-Primary partition key	bucket-name (String)
+Step 2:
+Upload the files DeeQuAnalysis-Parameterized.scala and deequ-1.0.1.jar in a S3 bucket. Make sure that the bucket you will be using is at the same region as the data you will be scanning with the DQ Tool.
 
-Primary sort key	file-name (String)
+Step 3: 
+Now we need to create our AWS Cloud Formation Template.
 
-![2](https://user-images.githubusercontent.com/61417780/94172153-716ef980-fe92-11ea-958a-e541f96f6f78.png)
+Navigate to AWS CloudFormation and select  Create Stack  With New Resources (standard) and then select  Template is ready and   Amazon S3 URL / Upload a template file based on where you have stored glue-job-deeq-cfn-new.yaml.
  
 
-b) Output table - “dpp-output-metrics-result” to store the metric result for each of the file. Here the primary key has been created by combination of the business keys to make it unique - bucketName  and FileName and entity and name of the attribute that we are measuring.
-	
-Table name	dpp-output-metrics-result
-Primary partition key	bucket_file_entity_name (String)
-
-![3](https://user-images.githubusercontent.com/61417780/94172156-716ef980-fe92-11ea-96e2-4562c6f25471.png)
-	 
-
-	S3 Buckets :
-S3 bucket names are globally unique and these buckets are already created. So you may need to create your own buckets in your accounts with different names. Accordingly you need to replace the bucket name (with your bucket name) in the scala scripts. You need to create the following buckets:
-1)	Input bucket: here you will store the data that you will use to run your DQ against. You can also store your dependent jars here ( 1.04 is the latest version – in this solution we use version 1.01 https://mvnrepository.com/artifact/com.amazon.deequ/deequ/1.0.1) 
-![4](https://user-images.githubusercontent.com/61417780/94172157-72079000-fe92-11ea-90ea-4a5a3148c7fb.png)
-
-2)	Output bucket: this is used to store the output data of the report. This is not necessary but we want to have this option as those outputs can be later used for lineage reports between files that have been scanned by this DQ solution.
- ![5](https://user-images.githubusercontent.com/61417780/94172158-72079000-fe92-11ea-92b9-2b5d27aa1576.png)
-
-	Glue Crawler
-Create a crawler pointing at the output files on the output bucket as per below:
-![6](https://user-images.githubusercontent.com/61417780/94172160-72079000-fe92-11ea-8f68-11d4e008cce7.png)
-
-•	Glue Job
-	Configuration of Glue Job
--	Use Spark 2.4 , Scala 2 (glue 1.0)
--	The role chosen while creation of Glue job should have access to S3 and DynamoDB for this job AmazonDynamoDBFullAccess, AmazonS3FullAccess and AWSGlueServiceRole access were chosen for the IAM role. 
--	Provide the dependent jars
-![7](https://user-images.githubusercontent.com/61417780/94172162-72a02680-fe92-11ea-87dc-dfc00829569c.png) 
-
--	Enable Glue Catalog for Hive Metastore
-![8](https://user-images.githubusercontent.com/61417780/94172163-72a02680-fe92-11ea-9204-249a7b024b40.png) 
-
-
--	Scala class name as - GlueApp
-![9](https://user-images.githubusercontent.com/61417780/94172165-7338bd00-fe92-11ea-9d41-7a9ea28965d8.png)
  
 
--	Scala script changes as follows per this script : https://github.com/angeloschionis/Ingestion-Pipeline-Deequ/blob/master/DeeQuAnalysis.scala 
--	Then you can create a workflow that will run the Glue Job and Crawler that will populate an Athena table to allow any reporting need using this approach 
-![10](https://user-images.githubusercontent.com/61417780/94172166-7338bd00-fe92-11ea-8d78-7dceb9797df9.png)
+Step 4:
+Click next and fill all the necessary information as per the description of each field.
+Tips:
+-	Make sure that all your buckets are in the same region
+-	Make sure that the AWS CloudFormation stack is created at the same region as your buckets
+-	For parameters “S3BucketForDeequJar” and “S3BucketForScript” use the full S3 bucket URL for the object i.e. s3://my-bucket-name/deequ-1.0.1.jar
+-	For Parameters “S3BucketForInputData” and “S3BucketForOutputData” just give the S3 bucket name which is unique worldwide i.e. my-unique-bucket-name
+-	For parameter “tempDir” you can use one of your input or output buckets or you can just use a new bucket
+-	For “DynamoDB Table names” you can leave the parameters empty and the CloudFormation script will create DynamoDB tables for you. If you wish to use pre-existing DynamoDB tables please provide the corresponding values to the parameters (note that they will have to exist in the same region as the rest of the infrastructure).
+-	Provide the names of the columns you would like to execute the DQ checks on and the extra parameters that are required for your checks.
 
--	You can see the results both in Athena and DynamoDB
-![11](https://user-images.githubusercontent.com/61417780/94172167-7338bd00-fe92-11ea-95c4-90e90b0176ed.png)
-![12](https://user-images.githubusercontent.com/61417780/94172169-73d15380-fe92-11ea-82d5-4dc97bee6477.png)
+After you finish click next.
+ 
+
+Step 5:
+In the next screen you can add Tags on your stack and use a specific IAM role if you want. You can also edit advanced options for Stack Policy, Rollback configuration etc. Click Next.
+ 
+
+Step 6:
+In the next screen you can review all your settings and make sure you tick the acknowledge button for IAM Role Creation before you click “Create stack”. After a few minutes and if you click on the “Stack info” tab you should be able to see the “CREATE_COMPLETE” green status.
+
+ 
+
+
+Step 7:
+Now please navigate to AWS Glue Service and then select “jobs” from the left panel. You will see that there is a newly created job called “jb-deeq-via-cfn1”. Please select this job, click “Action” and select “Run Job” as illustrated below.
+
   
+
+ 
+
+A new pop up window will appear and select again “Run Job”.
+
+Step 8:
+
+Depending on the overall size of the data you have provided on your input data S3 bucket this job will take 10 min or more. When that is done you should see the “Run status” as “Succeeded” as shown below. When that is done please select AWS Dynamo DB. 
+
+In the table “YourStackName-myInputDynamoDBTable” you should be able to see the list of your files you have provided as input. In the table “YourStackName- myOutputDynamoDBTable” you should be able to see the metrics for all your input data.
+ 
+
+ 
+
+ 
+
  
